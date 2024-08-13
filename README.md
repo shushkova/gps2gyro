@@ -7,7 +7,7 @@ This repository contains an algorithm for calculating **synthetic accelerometer 
 - **Quaternion Construction**: The method constructs quaternions to describe rotations.
 - **Krylov-Euler Conversion**: Quaternions are then converted to Krylov-Euler angles.
 - **Driver Behavior Classification**: Synthetic data allows classification of driver behavior.
-- **Open Source Validation and Visualization**: The method has been validated and visualized, with results available as open source.
+- **Open Source Validation and Visualization**: The method has been validated and visualized
 
 [//]: # (## Usage)
 
