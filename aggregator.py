@@ -11,7 +11,7 @@ from scipy import interpolate
 
 
 def interpolate_data(x, y, new_x):
-    f = interpolate.interp1d(x, y, kind='slinear')
+    f = interpolate.interp1d(x, y, kind='quadratic')
     return f(new_x)
 
 
@@ -33,12 +33,19 @@ class ManeuverDataAggregator:
     @staticmethod
     def dist(start_lat, start_lon, curr_lat, curr_lon):
         start_lat, start_lon, curr_lat, curr_lon = map(np.deg2rad, [start_lat, start_lon, curr_lat, curr_lon])
+        # todo work only above the equator
+        sign = 1
+        if start_lat == curr_lat:
+            sign = 1 if curr_lon > start_lon else -1
+        if start_lon == curr_lon:
+            sign = 1 if curr_lat > start_lat else -1
+
         dlon = curr_lon - start_lon
         dlat = curr_lat - start_lat
         a = sin(dlat / 2) ** 2 + cos(start_lat) * cos(curr_lat) * sin(dlon / 2) ** 2
         c = 2 * arcsin(sqrt(a))
         dist = 6367000 * c
-        return dist
+        return sign * dist
 
     def transform(self, df):
         df = df[['latitude', 'longitude', 'speed', 'datetime']]
