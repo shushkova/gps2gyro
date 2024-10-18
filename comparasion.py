@@ -1,11 +1,17 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import plotly.express as px
-from main import rotate, plot
-from maneuver_data_aggregator import ManeuverDataAggregator
+from scipy.spatial.transform import Rotation as R
 
 from aggregator import ManeuverDataAggregator
+
+import os
+
+
+def rotate(vector: np.array, angels: np.array) -> np.array:
+    r = R.from_euler('xyz', angels, degrees=True)
+    v = r.apply(vector)
+    return v
 
 
 def plot(df, origin_df, file_path: str):
@@ -20,17 +26,6 @@ def plot(df, origin_df, file_path: str):
     axis[1].set_title("Real trajectory")
     plt.savefig(file_path)
     plt.close()
-
-    fig = px.scatter_mapbox(df,
-                            lat="latitude",
-                            lon="longitude",
-                            zoom=8,
-                            height=600,
-                            width=900)
-
-    fig.update_layout(mapbox_style="mapbox://styles/mapbox/streets-v11")
-    fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
-    fig.show()
 
 
 def calculate_coordinates(df, initial_vector_val):
@@ -71,10 +66,12 @@ def draw_df(df, ts, path=None):
     origin_df = df[['x', 'y']]
     df = df[['speed', 'gr_x', 'gr_y', 'gr_z', 'latitude', 'longitude']]
     df = calculate_coordinates(df, initial_vector)
-    df.to_csv(f"./{ts}/calculated.csv", index_label='index')
+    path = f"{ts}/calculated.csv"
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    df.to_csv(path, index_label='index')
 
     if path:
-        plot(df, origin_df, path)
+        plot(df, origin_df, path.replace(".csv", ""))
     else:
         plot(df, origin_df, f'./{ts}/coordinate_curve_df.png')
 

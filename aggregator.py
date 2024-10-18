@@ -4,8 +4,7 @@ import pandas as pd
 import numpy as np
 from numpy import cos, sin, arcsin, sqrt
 
-from aggregators.angles.angles import get_angles
-from aggregators.interpolation import interpolate_data
+from angles import get_angles
 
 from scipy import interpolate
 
