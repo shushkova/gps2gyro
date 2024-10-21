@@ -42,9 +42,11 @@ def calculate_coordinates(df, initial_vector_val):
 
     for i in range(1, len(df)):
         current_val = rotate(np.array(previous_val), df[['gr_x', 'gr_y', 'gr_z']].iloc[i].to_numpy() * 0.1)
-
+        norm = np.linalg.norm(current_val)
+        norm = norm if norm != 0.0 else 1
         current_coord = previous_coord + current_val * (
-            df['speed'].iloc[i] * 0.1 / 3.6 / np.linalg.norm(current_val) if with_speed else 1)  # speed in km/h
+            df['speed'].iloc[i] * 0.1 / 3.6 / norm if with_speed else 1)
+
         df.at[df.index[i], 'vector'] = current_val.tolist()  # Ensure it's set as a list
         df.at[df.index[i], 'coordinate'] = current_coord.tolist()
         previous_val = current_val
@@ -97,7 +99,7 @@ def euclidean_distance(trajectory1, trajectory2):
 
 
 def main():
-    tss = []
+    tss = ['pure_stat_event_new_202410212134']
     for ts in tss:
         print('----------------------------')
         print(f"TS: {ts}")
