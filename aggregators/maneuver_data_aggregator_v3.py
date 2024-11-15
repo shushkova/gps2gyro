@@ -45,6 +45,11 @@ class DbV3DriverManeuverDataAggregator:
 
     def _transform(self, df):
         df = df[['latitude', 'longitude', 'speed', 'datetime']].sort_values(by='datetime')
+        df.reset_index(inplace=True)
+
+        idxmin = (df[df['speed'] > 0]['speed']).index.min()
+        idxmax = (df[df['speed'] > 0]['speed']).index.max()
+        df = df[idxmin:idxmax]
 
         df = df.drop_duplicates(subset=['latitude', 'longitude'], keep='first')
 

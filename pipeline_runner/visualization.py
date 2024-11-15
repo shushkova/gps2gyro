@@ -130,7 +130,7 @@ def visualize(original_df, aggregated_df, path):
     # way by coordinates from speed and gyro data
     calculated_df = _calculate_coordinates(aggregated_df)
     axis[2].set_title("Speed and gyro trajectory")
-    axis[2].plot(aggregated_df['x'], aggregated_df['y'], '-r', linewidth=3)
+    axis[2].plot(calculated_df['x'], calculated_df['y'], '-r', linewidth=3)
     calculated_file_path = f"resources/pipeline/visualization/data/{path}"
     os.makedirs(os.path.dirname(calculated_file_path), exist_ok=True)
     calculated_df.to_csv(calculated_file_path, index_label='index')
